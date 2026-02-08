@@ -1,0 +1,28 @@
+# System files
+.DS_Store
+*.pyc
+__pycache__/
+
+# IDE
+.vscode/
+.idea/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Temporary files
+presentation/all_charts/
+presentation/notebook_chart_*.png
+presentation/audience_chart_*.png
+
+# Backup files
+*_backup*.ipynb
+
+# Python scripts (helper files)
+clean_notebook.py
+update_notebook.py
+regenerate_chart.py
+regenerate_cluster_viz.py
+fix_tfidf_viz.py
+update_k_selection.py
+generate_ppt.py

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Content Analysis | Cinematic Case Study</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23141414'/%3E%3Cpath d='M8 4h4.5l6 16.5V4H23v24h-4.5L12.5 11.5V28H8V4z' fill='%23E50914'/%3E%3C/svg%3E">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="cinematic.css">
+</head>
+
+<body>
+    <!-- Particle Background -->
+    <canvas id="particles"></canvas>
+
+    <!-- Image Lightbox Modal -->
+    <div class="image-modal" id="imageModal">
+        <button class="modal-close" id="modalClose">×</button>
+        <img src="" alt="Enlarged chart" id="modalImage">
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+
+
+
+    <!-- Floating Demo CTA -->
+    <div class="floating-demo-cta" id="floatingDemo">
+        <span class="demo-pulse"></span>
+        <a href="#demo">🎯 Try Live Demo</a>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">
+            <img src="netflix_logo.png" alt="Netflix" class="logo-img">
+            <span class="logo-text">Netflix<br><small>Content Analysis</small></span>
+        </div>
+        <div class="nav-links">
+            <a href="#hero">Home</a>
+            <a href="#problem">Problem</a>
+            <a href="#data">Data</a>
+            <a href="#analysis">Analysis</a>
+            <a href="#clusters">Clusters</a>
+            <a href="#demo">Demo</a>
+        </div>
+        <div class="nav-author">
+            <span class="author-name">Rahul Kumar Singh</span>
+            <div class="author-avatar">RK</div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="hero">
+        <div class="hero-content">
+            <div class="hero-badge" data-animate="fade-up">
+                <span class="pulse"></span>
+                MACHINE LEARNING CASE STUDY
+            </div>
+            <h1 class="hero-title" data-animate="fade-up" data-delay="0.1">
+                <span class="line">Decoding</span>
+                <span class="line gradient">Netflix</span>
+                <span class="line">Content DNA</span>
+            </h1>
+            <p class="hero-desc" data-animate="fade-up" data-delay="0.2">
+                An immersive journey through 7,787 titles using Natural Language Processing,
+                Clustering Algorithms, and Data Visualization to uncover hidden patterns.
+            </p>
+            <div class="hero-stats" data-animate="fade-up" data-delay="0.3">
+                <div class="stat"><span class="stat-num" data-count="7787">0</span><span class="stat-label">Titles
+                        Analyzed</span></div>
+                <div class="stat"><span class="stat-num" data-count="12">0</span><span class="stat-label">Clusters
+                        Found</span></div>
+                <div class="stat"><span class="stat-num" data-count="12">0</span><span
+                        class="stat-label">Visualizations</span></div>
+            </div>
+            <div class="hero-cta" data-animate="fade-up" data-delay="0.4">
+                <button class="btn-primary" onclick="smoothScroll('#problem')">
+                    <span>Begin Exploration</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+                <button class="btn-ghost" onclick="smoothScroll('#demo')">Try Live Demo</button>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-image-wrapper">
+                <img src="netflix_hero_visual.png" alt="Netflix Data Intelligence Visualization" class="hero-image">
+                <div class="hero-image-glow"></div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll to Explore</span>
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROBLEM SECTION -->
+    <section id="problem" class="section dark-section">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <span class="section-num">01</span>
+                <h2 class="section-title">The Challenge</h2>
+                <p class="section-subtitle">Why content discovery on Netflix needs innovation</p>
+            </div>
+
+            <div class="problem-grid">
+                <div class="insight-card large">
+                    <div class="card-glow"></div>
+                    <div class="insight-icon">🎯</div>
+                    <h3>The Core Problem</h3>
+                    <p>With <span class="highlight">7,787+ titles</span> on Netflix, users face <span
+                            class="highlight">choice paralysis</span>. Traditional recommendation systems rely on
+                        viewing history, but what about new users or exploring new genres?</p>
+                </div>
+
+                <div class="insight-card stat-highlight">
+                    <div class="big-stat">5,000</div>
+                    <p>TF-IDF features extracted from text descriptions, cast, director & genres</p>
+                </div>
+
+                <div class="insight-card stat-highlight">
+                    <div class="big-stat">42.8%</div>
+                    <p>variance captured with 500 PCA components (95% needs 3,111 — text is high-dimensional)</p>
+                </div>
+            </div>
+
+            <div class="solution-box">
+                <h3>💡 Our Solution: Content-Based Clustering</h3>
+                <div class="solution-steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content"><strong>Analyze</strong>
+                            <p>NLP on descriptions & metadata</p>
+                        </div>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content"><strong>Transform</strong>
+                            <p>TF-IDF vectorization</p>
+                        </div>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content"><strong>Cluster</strong>
+                            <p>K-Means grouping</p>
+                        </div>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-content"><strong>Recommend</strong>
+                            <p>Similarity-based suggestions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DATA EXPLORATION SECTION -->
+    <section id="data" class="section">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <span class="section-num">02</span>
+                <h2 class="section-title">Data Exploration</h2>
+                <p class="section-subtitle">Understanding the Netflix content landscape</p>
+            </div>
+
+            <div class="chart-story">
+                <div class="chart-block" data-animate="slide-left">
+                    <div class="chart-image">
+                        <img src="01_missing_values.png" alt="Missing Values Analysis">
+                        <div class="chart-annotation top-right">
+                            <span class="dot pulse"></span>
+                            <span class="text">Director: 30% missing</span>
+                        </div>
+                    </div>
+                    <div class="chart-desc">
+                        <h3>Data Quality Assessment</h3>
+                        <p>Identifying missing values in the dataset to ensure robust analysis. The <span
+                                class="highlight">director</span> and <span class="highlight">cast</span> fields have
+                            the highest missing rates.</p>
+                        <div class="key-finding">
+                            <span>Key Finding:</span> 2,389 titles missing director information
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-block reverse" data-animate="slide-right">
+                    <div class="chart-image">
+                        <img src="02_content_type_distribution.png" alt="Content Type Distribution">
+                        <div class="chart-annotation left">
+                            <span class="dot pulse"></span>
+                            <span class="text">69% Movies</span>
+                        </div>
+                    </div>
+                    <div class="chart-desc">
+                        <h3>Content Type Distribution</h3>
+                        <p>Netflix's catalog is dominated by <span class="highlight">Movies (69%)</span> compared to TV
+                            Shows (31%). This ratio influences content strategy and user preferences.</p>
+                        <div class="key-finding">
+                            <span>Key Finding:</span> 5,377 Movies vs 2,410 TV Shows
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-block" data-animate="slide-left">
+                    <div class="chart-image">
+                        <img src="03_rating_distribution.png" alt="Rating Distribution">
+                        <div class="chart-annotation top-left">
+                            <span class="dot pulse"></span>
+                            <span class="text">TV-MA leads</span>
+                        </div>
+                    </div>
+                    <div class="chart-desc">
+                        <h3>Content Ratings Analysis</h3>
+                        <p><span class="highlight">TV-MA</span> (Mature Audience) is the most common rating, followed by
+                            TV-14. This indicates Netflix's strong focus on adult-oriented content.</p>
+                        <div class="key-finding">
+                            <span>Key Finding:</span> 2,027 titles rated TV-MA
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-block reverse" data-animate="slide-right">
+                    <div class="chart-image">
+                        <img src="04_release_year_trend.png" alt="Release Year Trend">
+                        <div class="chart-annotation right">
+                            <span class="dot pulse"></span>
+                            <span class="text">Peak: 2019-2020</span>
+                        </div>
+                    </div>
+                    <div class="chart-desc">
+                        <h3>Content Growth Over Time</h3>
+                        <p>Massive content expansion from <span class="highlight">2015 to 2020</span>, with the library
+                            growing exponentially as Netflix invested heavily in original content.</p>
+                        <div class="key-finding">
+                            <span>Key Finding:</span> 10x growth in content from 2015-2020
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-block" data-animate="slide-left">
+                    <div class="chart-image">
+                        <img src="05_top_countries.png" alt="Top Countries">
+                    </div>
+                    <div class="chart-desc">
+                        <h3>Global Content Origins</h3>
+                        <p>While <span class="highlight">United States</span> leads in content production, India, UK,
+                            and other countries contribute significantly to Netflix's global library.</p>
+                        <div class="key-finding">
+                            <span>Key Finding:</span> 35% of content is international
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-block reverse" data-animate="slide-right">
+                    <div class="chart-image">
+                        <img src="06_top_genres.png" alt="Top Genres">
+                    </div>
+                    <div class="chart-desc">
+                        <h3>Genre Distribution</h3>
+                        <p><span class="highlight">International Movies</span> and <span class="highlight">Dramas</span>
+                            dominate the platform, reflecting Netflix's strategy of acquiring diverse global content.
+                        </p>
+                        <div class="key-finding">
+                            <span>Key Finding:</span> Drama appears in 50%+ of all titles
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-block" data-animate="slide-left">
+                    <div class="chart-image">
+                        <img src="15_audience_distribution.png" alt="Audience Distribution">
+                        <div class="chart-annotation top-left">
+                            <span class="dot pulse"></span>
+                            <span class="text">~50% Adults</span>
+                        </div>
+                    </div>
+                    <div class="chart-desc">
+                        <h3>Target Audience Distribution</h3>
+                        <p>Around <span class="highlight">50% of content</span> is produced for adult audiences,
+                            followed by young adults, older kids, and kids. Interestingly, Netflix has the
+                            <span class="highlight">least content for teenagers</span> compared to other age groups.
+                        </p>
+                        <div class="key-finding">
+                            <span>Key Finding:</span> Teens are the most underserved demographic on Netflix
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ANALYSIS SECTION -->
+    <section id="analysis" class="section dark-section">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <span class="section-num">03</span>
+                <h2 class="section-title">The Analysis Pipeline</h2>
+                <p class="section-subtitle">From raw text to intelligent clusters</p>
+            </div>
+
+            <!-- Clean Pipeline Design -->
+            <div class="pipeline-container">
+                <div class="pipeline-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Text Processing</h4>
+                        <p>Combine description, cast, director & genres</p>
+                    </div>
+                </div>
+                <div class="pipeline-connector-line"></div>
+                <div class="pipeline-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>NLP Pipeline</h4>
+                        <p>Tokenization, Lemmatization, Stop words removal</p>
+                    </div>
+                </div>
+                <div class="pipeline-connector-line"></div>
+                <div class="pipeline-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>TF-IDF Vectorization</h4>
+                        <p>5,000 features extracted from text</p>
+                    </div>
+                </div>
+                <div class="pipeline-connector-line"></div>
+                <div class="pipeline-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>PCA Reduction</h4>
+                        <p>Reduced to 500 principal components</p>
+                    </div>
+                </div>
+                <div class="pipeline-connector-line"></div>
+                <div class="pipeline-step final">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>K-Means Clustering</h4>
+                        <p>14 optimal content clusters identified</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-grid">
+                <div class="chart-card with-explanation">
+                    <div class="card-header">
+                        <h3>TF-IDF Feature Importance</h3>
+                        <div class="analyzing"><span class="dot"></span>ANALYZING</div>
+                    </div>
+                    <img src="07_top_tfidf_terms.png" alt="TF-IDF Terms">
+                    <div class="chart-explanation">
+                        <h4>🤔 Why TF-IDF?</h4>
+                        <p><strong>Problem:</strong> Raw text (descriptions, genres) cannot be used directly for
+                            clustering - machines need numbers.</p>
+                        <p><strong>Solution:</strong> TF-IDF converts text to numerical vectors by measuring how
+                            important each word is to a document relative to the entire corpus.</p>
+                        <p><strong>Why not just word count?</strong> Common words like "the", "movie", "story" would
+                            dominate. TF-IDF down-weights frequent terms and highlights unique distinguishing words.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="chart-card with-explanation">
+                    <div class="card-header">
+                        <h3>PCA Variance Explained</h3>
+                        <div class="analyzing"><span class="dot"></span>ANALYZING</div>
+                    </div>
+                    <img src="08_pca_variance.png" alt="PCA Variance">
+                    <div class="chart-explanation">
+                        <h4>🤔 Why PCA (Dimensionality Reduction)?</h4>
+                        <p><strong>Problem:</strong> TF-IDF creates 5,000+ features. High-dimensional data causes
+                            the
+                            "curse of dimensionality" - distances become meaningless, clustering fails.</p>
+                        <p><strong>Solution:</strong> PCA reduces dimensions while preserving key variance.
+                            We go from 5,000 → 500 features (42.8% variance — text data is inherently high-dimensional).
+                        </p>
+                        <p><strong>Key Insight:</strong> The cumulative variance plot shows knee point at ~500
+                            components - beyond this, we get diminishing returns.</p>
+                    </div>
+                </div>
+
+                <div class="chart-card large with-explanation">
+                    <div class="card-header">
+                        <h3>Optimal K Selection</h3>
+                        <div class="analyzing green"><span class="dot"></span>COMPLETE</div>
+                    </div>
+                    <img src="09_kmeans_metrics.png" alt="K-Means Metrics">
+                    <div class="chart-explanation">
+                        <h4>🤔 Why K-Means? How did we choose K=12?</h4>
+                        <p><strong>Why K-Means:</strong> It's efficient for large datasets, works well with
+                            numerical
+                            features, and creates compact spherical clusters - ideal for content similarity.</p>
+                        <p><strong>Elbow Method:</strong> We plot inertia (within-cluster variance) vs K. The
+                            inertia decreases steadily, so we also use Silhouette Score across K=2 to 14.</p>
+                        <p><strong>Silhouette Analysis:</strong> K=12 achieved the highest Silhouette Score (0.030),
+                            meaning items are most similar to their own cluster vs. neighboring clusters at this K.</p>
+                    </div>
+                </div>
+
+                <div class="chart-card with-explanation">
+                    <div class="card-header">
+                        <h3>Hierarchical Clustering (Validation)</h3>
+                        <div class="analyzing"><span class="dot"></span>ANALYZING</div>
+                    </div>
+                    <img src="10_dendrogram.png" alt="Dendrogram">
+                    <div class="chart-explanation">
+                        <h4>🤔 Why Hierarchical Clustering too?</h4>
+                        <p><strong>Purpose:</strong> Validate our K-Means results using a completely different
+                            algorithm
+                            (Agglomerative Clustering).</p>
+                        <p><strong>Dendrogram Insight:</strong> The tree structure shows natural groupings. We used
+                            Agglomerative Clustering with Ward linkage as a validation method against K-Means.</p>
+                        <p><strong>Best Practice:</strong> Always validate clustering results with multiple methods
+                            to
+                            ensure robustness.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLUSTERS SECTION -->
+    <section id="clusters" class="section">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <span class="section-num">04</span>
+                <h2 class="section-title">Cluster Discovery</h2>
+                <p class="section-subtitle">12 distinct content clusters emerged from unsupervised learning</p>
+            </div>
+
+            <div class="cluster-hero">
+                <img src="11_cluster_visualization_2d.png" alt="2D Cluster Visualization" class="cluster-main-viz">
+                <div class="cluster-annotations">
+                    <div class="annotation a1" style="top:15%;left:10%;">
+                        <span class="dot pulse"></span>
+                        <span class="label">12 K-Means clusters</span>
+                    </div>
+                    <div class="annotation a2" style="top:25%;right:15%;">
+                        <span class="dot pulse"></span>
+                        <span class="label">Silhouette: 0.030</span>
+                    </div>
+                    <div class="annotation a3" style="bottom:25%;left:20%;">
+                        <span class="dot pulse"></span>
+                        <span class="label">PCA-reduced features</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-row">
+                <div class="chart-card with-explanation">
+                    <div class="card-header">
+                        <h3>Cluster Sizes</h3>
+                    </div>
+                    <img src="12_cluster_sizes.png" alt="Cluster Sizes">
+                    <div class="chart-explanation">
+                        <h4>🤔 Why analyze cluster sizes?</h4>
+                        <p><strong>Purpose:</strong> Check if clusters are balanced. Highly imbalanced clusters might
+                            indicate poor clustering or interesting insights.</p>
+                        <p><strong>What we found:</strong> Cluster sizes range from 148 to 1,433 titles, with the
+                            largest cluster capturing general dramas and the smallest capturing niche content.</p>
+                        <p><strong>Business Insight:</strong> Netflix has diverse content across all categories - good
+                            for catering to varied user preferences.</p>
+                    </div>
+                </div>
+                <div class="chart-card with-explanation">
+                    <div class="card-header">
+                        <h3>Cluster Composition</h3>
+                    </div>
+                    <img src="14_cluster_composition.png" alt="Cluster Composition">
+                    <div class="chart-explanation">
+                        <h4>🤔 Why analyze composition?</h4>
+                        <p><strong>Purpose:</strong> Understand WHAT makes each cluster unique - which genres,
+                            countries, and content types dominate each cluster.</p>
+                        <p><strong>Validation:</strong> If clusters have distinct compositions, it confirms our
+                            clustering captured meaningful patterns, not random groupings.</p>
+                        <p><strong>Interpretability:</strong> Helps us name and describe clusters meaningfully (e.g.,
+                            "International Dramas" vs just "Cluster 1").</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wordcloud-section">
+                <h3>Cluster Word Clouds</h3>
+                <img src="13_word_clouds.png" alt="Word Clouds" class="wordcloud-img">
+                <div class="wordcloud-explanation">
+                    <h4>🤔 Why Word Clouds?</h4>
+                    <p><strong>Visual Interpretation:</strong> Word clouds show the most frequent/important terms in
+                        each cluster at a glance. Larger words = more common in that cluster.</p>
+                    <p><strong>Cluster Validation:</strong> If word clouds show distinct themes (e.g., "drama",
+                        "romance" in one vs. "crime", "thriller" in another), our clustering successfully grouped
+                        similar content.</p>
+                    <p><strong>Communication Tool:</strong> Easy to explain cluster themes to non-technical stakeholders
+                        - one image tells the story.</p>
+                </div>
+            </div>
+
+            <div class="clusters-summary">
+                <div class="cluster-card" style="--color:#e50914;">
+                    <div class="cluster-stat">12</div>
+                    <h4>Total Clusters</h4>
+                    <p>Optimal K selected via Silhouette Score</p>
+                </div>
+                <div class="cluster-card" style="--color:#00d4ff;">
+                    <div class="cluster-stat">0.030</div>
+                    <h4>Silhouette Score</h4>
+                    <p>Cluster separation quality (higher = better)</p>
+                </div>
+                <div class="cluster-card" style="--color:#8b5cf6;">
+                    <div class="cluster-stat">78.78</div>
+                    <h4>Calinski-Harabasz</h4>
+                    <p>Cluster density (K-Means beat Agglom.)</p>
+                </div>
+                <div class="cluster-card" style="--color:#f59e0b;">
+                    <div class="cluster-stat">4.46</div>
+                    <h4>Davies-Bouldin</h4>
+                    <p>Cluster overlap — lower is better</p>
+                </div>
+                <div class="cluster-card" style="--color:#10b981;">
+                    <div class="cluster-stat">2,169</div>
+                    <h4>Largest Cluster</h4>
+                    <p>Sizes range from 85 to 2,169 titles</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEMO SECTION -->
+    <section id="demo" class="section dark-section">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <span class="section-num">05</span>
+                <h2 class="section-title">Live Recommendation Demo</h2>
+                <p class="section-subtitle">Experience the power of content-based recommendations</p>
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-search">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Enter a movie or TV show title...">
+                        <button id="searchBtn">Find Similar</button>
+                    </div>
+                    <div class="quick-picks">
+                        <span>Try:</span>
+                        <button data-title="Stranger Things">Stranger Things</button>
+                        <button data-title="The Crown">The Crown</button>
+                        <button data-title="Money Heist">Money Heist</button>
+                        <button data-title="Breaking Bad">Breaking Bad</button>
+                        <button data-title="Black Mirror">Black Mirror</button>
+                    </div>
+                </div>
+                <div id="demoResults" class="demo-results">
+                    <div class="placeholder">
+                        <div class="placeholder-icon">🎬</div>
+                        <h3>Enter a title to discover similar content</h3>
+                        <p>Our AI analyzes genre, cast, director, and description to find the perfect matches</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INSIGHTS SECTION -->
+    <section id="insights" class="section">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <span class="section-num">06</span>
+                <h2 class="section-title">Key Insights & Impact</h2>
+                <p class="section-subtitle">What this analysis means for Netflix</p>
+            </div>
+
+            <div class="insights-grid">
+                <div class="insight-big">
+                    <div class="insight-icon">🎯</div>
+                    <h3>K-Means > Agglomerative</h3>
+                    <p>K-Means outperformed Hierarchical clustering on key metrics: Silhouette (0.030),
+                        Calinski-Harabasz (78.78), Davies-Bouldin (4.46)</p>
+                </div>
+                <div class="insight-big">
+                    <div class="insight-icon">📊</div>
+                    <h3>5,000 → 500 Dimensions</h3>
+                    <p>PCA reduced 5,000 TF-IDF features to 500 components (42.8% variance). Text data is inherently
+                        high-dimensional — 95% would need 3,111 components</p>
+                </div>
+                <div class="insight-big">
+                    <div class="insight-icon">🌍</div>
+                    <h3>Content-Based Cold Start</h3>
+                    <p>Cosine similarity on TF-IDF vectors enables recommendations without user history — solving the
+                        cold-start problem for new users and newly added content</p>
+                </div>
+            </div>
+
+            <div class="final-cta">
+                <h3>Ready to explore the full analysis?</h3>
+                <div class="cta-buttons">
+                    <a href="../Netflix_Clustering_Analysis.ipynb" class="btn-primary">View Notebook</a>
+                    <a href="#hero" class="btn-ghost">Back to Top</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="netflix_logo.png" alt="Netflix" class="logo-img">
+                <div class="brand-text">
+                    <span class="brand-title">Netflix Content Clustering</span>
+                    <span class="brand-subtitle">Unsupervised ML Case Study</span>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <div class="author-badge">
+                    <div class="author-avatar-footer">RK</div>
+                    <div class="author-details">
+                        <span class="author-title">Crafted by</span>
+                        <strong>Rahul Kumar Singh</strong>
+                    </div>
+                </div>
+                <span class="footer-meta">© 2026</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="cinematic.js"></script>
+    <script src="netflix_data.js"></script>
+    <script src="demo.js"></script>
+</body>
+
+</html>
