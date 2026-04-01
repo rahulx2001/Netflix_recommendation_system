@@ -561,7 +561,7 @@ function initShaderBackground() {
         }
     `;
 
-    // Fragment shader - Netflix-themed colors
+    // Fragment shader - Original multicolor version
     const fragmentShader = `
         #define TWO_PI 6.2831853072
         #define PI 3.14159265359
@@ -576,18 +576,13 @@ function initShaderBackground() {
             float lineWidth = 0.002;
 
             vec3 color = vec3(0.0);
-            
-            // Netflix red, orange, and dark tones
             for(int j = 0; j < 3; j++){
                 for(int i = 0; i < 5; i++){
-                    float intensity = lineWidth * float(i * i) / abs(fract(t - 0.01 * float(j) + float(i) * 0.01) * 5.0 - length(uv) + mod(uv.x + uv.y, 0.2));
-                    if(j == 0) color.r += intensity * 1.2; // Red channel boosted
-                    else if(j == 1) color.g += intensity * 0.3; // Less green
-                    else color.b += intensity * 0.2; // Even less blue
+                    color[j] += lineWidth * float(i * i) / abs(fract(t - 0.01 * float(j) + float(i) * 0.01) * 5.0 - length(uv) + mod(uv.x + uv.y, 0.2));
                 }
             }
             
-            gl_FragColor = vec4(color, 1.0);
+            gl_FragColor = vec4(color[0], color[1], color[2], 1.0);
         }
     `;
 
