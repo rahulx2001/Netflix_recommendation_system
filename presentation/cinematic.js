@@ -549,108 +549,172 @@ if (document.readyState === 'loading') {
     initHoverTextEffect();
 }
 
-// ===== THREE.JS SHADER ANIMATION BACKGROUND =====
-function initShaderBackground() {
+// ===== FLOW FIELD NEURAL BACKGROUND =====
+function initFlowFieldBackground() {
     const container = document.getElementById('shaderBackground');
-    if (!container || typeof THREE === 'undefined') return;
+    if (!container) return;
 
-    // Vertex shader
-    const vertexShader = `
-        void main() {
-            gl_Position = vec4(position, 1.0);
-        }
-    `;
+    // Create canvas
+    const canvas = document.createElement('canvas');
+    canvas.style.display = 'block';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    container.appendChild(canvas);
 
-    // Fragment shader - Original multicolor version
-    const fragmentShader = `
-        #define TWO_PI 6.2831853072
-        #define PI 3.14159265359
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-        precision highp float;
-        uniform vec2 resolution;
-        uniform float time;
-
-        void main(void) {
-            vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
-            float t = time * 0.05;
-            float lineWidth = 0.002;
-
-            vec3 color = vec3(0.0);
-            for(int j = 0; j < 3; j++){
-                for(int i = 0; i < 5; i++){
-                    color[j] += lineWidth * float(i * i) / abs(fract(t - 0.01 * float(j) + float(i) * 0.01) * 5.0 - length(uv) + mod(uv.x + uv.y, 0.2));
-                }
-            }
-            
-            gl_FragColor = vec4(color[0], color[1], color[2], 1.0);
-        }
-    `;
-
-    // Initialize Three.js
-    const camera = new THREE.Camera();
-    camera.position.z = 1;
-
-    const scene = new THREE.Scene();
-    const geometry = new THREE.PlaneGeometry(2, 2);
-
-    const uniforms = {
-        time: { type: 'f', value: 1.0 },
-        resolution: { type: 'v2', value: new THREE.Vector2() }
+    // Configuration
+    const config = {
+        color: '#e50914', // Netflix red
+        trailOpacity: 0.08,
+        particleCount: 600,
+        speed: 0.8
     };
 
-    const material = new THREE.ShaderMaterial({
-        uniforms: uniforms,
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader
-    });
+    let width = container.clientWidth || window.innerWidth;
+    let height = container.clientHeight || window.innerHeight;
+    let particles = [];
+    let animationFrameId;
+    let mouse = { x: -1000, y: -1000 };
 
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    // Particle class
+    class Particle {
+        constructor() {
+            this.reset(true);
+        }
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
+        reset(initial = false) {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = 0;
+            this.vy = 0;
+            this.age = initial ? Math.random() * 200 : 0;
+            this.life = Math.random() * 200 + 100;
+        }
 
-    // Handle resize
-    function onResize() {
-        const width = container.clientWidth || window.innerWidth;
-        const height = container.clientHeight || window.innerHeight;
-        renderer.setSize(width, height);
-        uniforms.resolution.value.x = renderer.domElement.width;
-        uniforms.resolution.value.y = renderer.domElement.height;
+        update() {
+            // Flow field math
+            const angle = (Math.cos(this.x * 0.005) + Math.sin(this.y * 0.005)) * Math.PI;
+            
+            // Add flow force
+            this.vx += Math.cos(angle) * 0.2 * config.speed;
+            this.vy += Math.sin(angle) * 0.2 * config.speed;
+
+            // Mouse repulsion
+            const dx = mouse.x - this.x;
+            const dy = mouse.y - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const interactionRadius = 150;
+
+            if (distance < interactionRadius) {
+                const force = (interactionRadius - distance) / interactionRadius;
+                this.vx -= dx * force * 0.05;
+                this.vy -= dy * force * 0.05;
+            }
+
+            // Apply velocity with friction
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vx *= 0.95;
+            this.vy *= 0.95;
+
+            // Age and reset
+            this.age++;
+            if (this.age > this.life) {
+                this.reset();
+            }
+
+            // Wrap around screen
+            if (this.x < 0) this.x = width;
+            if (this.x > width) this.x = 0;
+            if (this.y < 0) this.y = height;
+            if (this.y > height) this.y = 0;
+        }
+
+        draw() {
+            // Fade based on age
+            const alpha = 1 - Math.abs((this.age / this.life) - 0.5) * 2;
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = config.color;
+            ctx.fillRect(this.x, this.y, 1.5, 1.5);
+        }
     }
 
-    onResize();
-    window.addEventListener('resize', onResize);
+    // Initialize
+    function init() {
+        const dpr = window.devicePixelRatio || 1;
+        width = container.clientWidth || window.innerWidth;
+        height = container.clientHeight || window.innerHeight;
+        
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+
+        particles = [];
+        for (let i = 0; i < config.particleCount; i++) {
+            particles.push(new Particle());
+        }
+    }
 
     // Animation loop
-    let animationId;
     function animate() {
-        animationId = requestAnimationFrame(animate);
-        uniforms.time.value += 0.05;
-        renderer.render(scene, camera);
+        // Trail effect
+        ctx.fillStyle = `rgba(10, 10, 15, ${config.trailOpacity})`;
+        ctx.fillRect(0, 0, width, height);
+
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+
+        animationFrameId = requestAnimationFrame(animate);
     }
 
+    // Event handlers
+    function handleResize() {
+        init();
+    }
+
+    function handleMouseMove(e) {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+    }
+
+    function handleMouseLeave() {
+        mouse.x = -1000;
+        mouse.y = -1000;
+    }
+
+    // Start
+    init();
     animate();
 
-    // Fade in effect
+    window.addEventListener('resize', handleResize);
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseleave', handleMouseLeave);
+
+    // Fade in
     gsap.fromTo(container, 
         { opacity: 0 }, 
-        { opacity: 1, duration: 2, ease: 'power2.out' }
+        { opacity: 1, duration: 1.5, ease: 'power2.out' }
     );
 
-    // Cleanup on page unload
+    // Cleanup
     window.addEventListener('beforeunload', () => {
-        cancelAnimationFrame(animationId);
-        renderer.dispose();
-        geometry.dispose();
-        material.dispose();
+        cancelAnimationFrame(animationFrameId);
+        window.removeEventListener('resize', handleResize);
+        container.removeEventListener('mousemove', handleMouseMove);
+        container.removeEventListener('mouseleave', handleMouseLeave);
     });
 }
 
-// Initialize shader on load
+// Initialize flow field on load
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initShaderBackground);
+    document.addEventListener('DOMContentLoaded', initFlowFieldBackground);
 } else {
-    initShaderBackground();
+    initFlowFieldBackground();
 }
