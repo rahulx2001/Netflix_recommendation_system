@@ -718,3 +718,24 @@ if (document.readyState === 'loading') {
 } else {
     initFlowFieldBackground();
 }
+
+// ===== NAVBAR SCROLL EFFECT =====
+function initNavbarScroll() {
+    const nav = document.querySelector('.nav');
+    if (!nav) return;
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+}
+
+// Initialize navbar scroll
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNavbarScroll);
+} else {
+    initNavbarScroll();
+}
