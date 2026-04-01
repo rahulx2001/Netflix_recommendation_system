@@ -498,3 +498,53 @@ function initNavHighlight() {
 }
 
 console.log('🎬 Netflix Cinematic Presentation Loaded');
+
+// ===== HOVER TEXT FOOTER EFFECT =====
+function initHoverTextEffect() {
+    const svg = document.querySelector('.hover-text-svg');
+    if (!svg) return;
+
+    const maskCircle = svg.querySelector('.mask-circle');
+    if (!maskCircle) return;
+
+    let isHovered = false;
+
+    svg.addEventListener('mouseenter', () => {
+        isHovered = true;
+    });
+
+    svg.addEventListener('mouseleave', () => {
+        isHovered = false;
+        // Reset circle position smoothly
+        gsap.to(maskCircle, {
+            attr: { r: 0, cx: 200, cy: 50 },
+            duration: 0.3,
+            ease: 'power2.out'
+        });
+    });
+
+    svg.addEventListener('mousemove', (e) => {
+        if (!isHovered) return;
+
+        const rect = svg.getBoundingClientRect();
+        const viewBox = svg.viewBox.baseVal;
+        
+        // Calculate position relative to SVG viewBox
+        const x = ((e.clientX - rect.left) / rect.width) * viewBox.width;
+        const y = ((e.clientY - rect.top) / rect.height) * viewBox.height;
+
+        // Animate mask circle to follow cursor
+        gsap.to(maskCircle, {
+            attr: { cx: x, cy: y, r: 120 },
+            duration: 0.15,
+            ease: 'power2.out'
+        });
+    });
+}
+
+// Initialize on DOM ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHoverTextEffect);
+} else {
+    initHoverTextEffect();
+}
